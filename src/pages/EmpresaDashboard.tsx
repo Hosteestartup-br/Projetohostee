@@ -390,13 +390,13 @@ export default function EmpresaDashboard() {
 
               <div className="stats-grid" style={{ marginTop: '20px' }}>
                 <div className="stat-card highlight-weekly">
-                  <h3>💰 Lucro Semanal</h3>
+                  <h3>Lucro Semanal</h3>
                   <p className="stat-number">R$ {stats.lucroSemanal.toFixed(2)}</p>
                   <p className="stat-description">Últimos 7 dias</p>
                 </div>
 
                 <div className="stat-card highlight-monthly">
-                  <h3>📊 Lucro Mensal</h3>
+                  <h3>Lucro Mensal</h3>
                   <p className="stat-number">R$ {stats.lucroMensal.toFixed(2)}</p>
                   <p className="stat-description">Mês atual</p>
                 </div>
