@@ -30,7 +30,7 @@ export default function Header() {
         <div className="header-content">
           {/* Logo */}
           <div className="logo" onClick={() => navigate('/')}>
-            <img src="/Logo Host.ee estendida branca2.png" alt="Host.ee" />
+            <img src="/Logo Host.ee estendida branca1.png" alt="Host.ee" />
           </div>
 
           {/* Menu de navegação */}
