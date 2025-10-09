@@ -8,8 +8,8 @@ import { supabase, Servico, Agendamento } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 
 interface AgendamentoCompleto extends Agendamento {
-  usuario: { nome: string; email: string }
-  servico: { nome: string; preco: number }
+  usuarios: { nome: string; email: string }
+  servicos: { nome: string; preco: number }
 }
 
 export default function EmpresaDashboard() {
@@ -245,24 +245,52 @@ export default function EmpresaDashboard() {
   // Calcular estatísticas do dashboard
   const calcularEstatisticas = () => {
     const hoje = new Date()
+    hoje.setHours(23, 59, 59, 999)
     const trintaDiasAtras = new Date(hoje.getTime() - (30 * 24 * 60 * 60 * 1000))
-    
-    const agendamentosRecentes = agendamentos.filter(a => 
+
+    const agendamentosRecentes = agendamentos.filter(a =>
       new Date(a.created_at || '') >= trintaDiasAtras
     )
-    
+
     const agendamentosPendentes = agendamentos.filter(a => a.status === 'pendente')
     const agendamentosFinalizados = agendamentos.filter(a => a.status === 'finalizado')
-    
-    const totalVendas = agendamentosFinalizados.reduce((total, a) => 
+
+    const totalVendas = agendamentosFinalizados.reduce((total, a) =>
       total + (a.servicos?.preco || 0), 0
     )
+
+    // Calcular lucro semanal (últimos 7 dias) - baseado na data do agendamento que foi realizado
+    const seteDiasAtras = new Date()
+    seteDiasAtras.setDate(hoje.getDate() - 7)
+    seteDiasAtras.setHours(0, 0, 0, 0)
+
+    const lucroSemanal = agendamentos
+      .filter(a => {
+        if (a.status !== 'finalizado') return false
+        const dataAgendamento = new Date(a.data)
+        return dataAgendamento >= seteDiasAtras && dataAgendamento <= hoje
+      })
+      .reduce((total, a) => total + (a.servicos?.preco || 0), 0)
+
+    // Calcular lucro mensal (mês atual) - baseado na data do agendamento que foi realizado
+    const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1)
+    inicioMes.setHours(0, 0, 0, 0)
+
+    const lucroMensal = agendamentos
+      .filter(a => {
+        if (a.status !== 'finalizado') return false
+        const dataAgendamento = new Date(a.data)
+        return dataAgendamento >= inicioMes && dataAgendamento <= hoje
+      })
+      .reduce((total, a) => total + (a.servicos?.preco || 0), 0)
 
     return {
       agendamentosRecentes: agendamentosRecentes.length,
       agendamentosPendentes: agendamentosPendentes.length,
       agendamentosFinalizados: agendamentosFinalizados.length,
-      totalVendas
+      totalVendas,
+      lucroSemanal,
+      lucroMensal
     }
   }
 
@@ -343,20 +371,34 @@ export default function EmpresaDashboard() {
                   <h3>{t('companyDashboard.newBookings')}</h3>
                   <p className="stat-number">{stats.agendamentosRecentes}</p>
                 </div>
-                
+
                 <div className="stat-card">
                   <h3>{t('companyDashboard.pendingBookings')}</h3>
                   <p className="stat-number">{stats.agendamentosPendentes}</p>
                 </div>
-                
+
                 <div className="stat-card">
                   <h3>{t('companyDashboard.completedBookings')}</h3>
                   <p className="stat-number">{stats.agendamentosFinalizados}</p>
                 </div>
-                
+
                 <div className="stat-card">
                   <h3>{t('companyDashboard.totalSales')}</h3>
                   <p className="stat-number">R$ {stats.totalVendas.toFixed(2)}</p>
+                </div>
+              </div>
+
+              <div className="stats-grid" style={{ marginTop: '20px' }}>
+                <div className="stat-card highlight-weekly">
+                  <h3>💰 Lucro Semanal</h3>
+                  <p className="stat-number">R$ {stats.lucroSemanal.toFixed(2)}</p>
+                  <p className="stat-description">Últimos 7 dias</p>
+                </div>
+
+                <div className="stat-card highlight-monthly">
+                  <h3>📊 Lucro Mensal</h3>
+                  <p className="stat-number">R$ {stats.lucroMensal.toFixed(2)}</p>
+                  <p className="stat-description">Mês atual</p>
                 </div>
               </div>
 

@@ -1183,6 +1183,22 @@ body {
   color: #ffffff;
 }
 
+.stat-description {
+  font-size: 0.85rem;
+  color: #888888;
+  margin-top: 0.5rem;
+}
+
+.stat-card.highlight-weekly {
+  background: linear-gradient(135deg, #1a4d1a 0%, #2a5d2a 100%);
+  border: 1px solid #3a7d3a;
+}
+
+.stat-card.highlight-monthly {
+  background: linear-gradient(135deg, #1a3a5d 0%, #2a4a6d 100%);
+  border: 1px solid #3a5a7d;
+}
+
 .quick-stats {
   background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   border: 1px solid #333333;
