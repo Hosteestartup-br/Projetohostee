@@ -140,10 +140,10 @@ export default function NotificationCenter() {
     const diffHoras = Math.floor(diffMs / 3600000)
     const diffDias = Math.floor(diffMs / 86400000)
 
-    if (diffMinutos < 1) return 'Agora'
-    if (diffMinutos < 60) return `${diffMinutos}min atrás`
-    if (diffHoras < 24) return `${diffHoras}h atrás`
-    if (diffDias < 7) return `${diffDias}d atrás`
+    if (diffMinutos < 1) return t('notification.now')
+    if (diffMinutos < 60) return t('notification.minutesAgo', { count: diffMinutos })
+    if (diffHoras < 24) return t('notification.hoursAgo', { count: diffHoras })
+    if (diffDias < 7) return t('notification.daysAgo', { count: diffDias })
 
     return dataNotificacao.toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -180,7 +180,7 @@ export default function NotificationCenter() {
         <button
           className="notification-button"
           onClick={togglePanel}
-          aria-label="Notificações"
+          aria-label={t('notification.notifications')}
         >
           <svg
             width="24"
@@ -198,11 +198,11 @@ export default function NotificationCenter() {
         {showPanel && (
           <div className="notification-panel" ref={panelRef}>
             <div className="notification-header">
-              <h3>Notificações</h3>
+              <h3>{t('notification.notifications')}</h3>
             </div>
             <div className="notification-empty">
               <span className="empty-icon">🔔</span>
-              <p>Nenhuma notificação</p>
+              <p>{t('notification.noNotifications')}</p>
             </div>
           </div>
         )}
@@ -236,13 +236,13 @@ export default function NotificationCenter() {
       {showPanel && (
         <div className="notification-panel" ref={panelRef}>
           <div className="notification-header">
-            <h3>Notificações</h3>
+            <h3>{t('notification.notifications')}</h3>
             {naoLidas > 0 && (
               <button
                 className="mark-all-read"
                 onClick={marcarTodasComoLidas}
               >
-                Marcar todas como lidas
+                {t('notification.markAllAsRead')}
               </button>
             )}
           </div>
@@ -255,7 +255,7 @@ export default function NotificationCenter() {
             ) : notificacoes.length === 0 ? (
               <div className="notification-empty">
                 <span className="empty-icon">🔔</span>
-                <p>Nenhuma notificação</p>
+                <p>{t('notification.noNotifications')}</p>
               </div>
             ) : (
               notificacoes.map((notificacao) => (

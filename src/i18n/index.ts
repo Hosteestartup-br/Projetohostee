@@ -348,7 +348,16 @@ const resources = {
 
       // Dashboard tabs - Additional translations
       "dashboard.dashboard": "Dashboard",
-      "dashboard.agendamentos": "Agendamentos"
+      "dashboard.agendamentos": "Agendamentos",
+
+      // Notifications
+      "notification.notifications": "Notificações",
+      "notification.noNotifications": "Nenhuma notificação",
+      "notification.markAllAsRead": "Marcar todas como lidas",
+      "notification.now": "Agora",
+      "notification.minutesAgo": "{{count}}min atrás",
+      "notification.hoursAgo": "{{count}}h atrás",
+      "notification.daysAgo": "{{count}}d atrás"
     }
   },
   en: {
@@ -696,7 +705,16 @@ const resources = {
 
       // Dashboard tabs - Additional translations
       "dashboard.dashboard": "Dashboard",
-      "dashboard.agendamentos": "Appointments"
+      "dashboard.agendamentos": "Appointments",
+
+      // Notifications
+      "notification.notifications": "Notifications",
+      "notification.noNotifications": "No notifications",
+      "notification.markAllAsRead": "Mark all as read",
+      "notification.now": "Now",
+      "notification.minutesAgo": "{{count}}min ago",
+      "notification.hoursAgo": "{{count}}h ago",
+      "notification.daysAgo": "{{count}}d ago"
     }
   }
 };
