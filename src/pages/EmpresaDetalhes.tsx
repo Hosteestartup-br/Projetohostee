@@ -99,7 +99,7 @@ export default function EmpresaDetalhes() {
 
       if (!usuarios || usuarios.length === 0) {
         console.log('⚠️ Usuário empresa não encontrado, tentando método alternativo...')
-        
+
         // Método 2: Buscar serviços diretamente
         console.log('🔍 Método 2: Buscando serviços diretamente...')
         const { data: todosServicos, error: servicosError } = await supabase
@@ -114,6 +114,13 @@ export default function EmpresaDetalhes() {
 
         console.log('✅ Todos os serviços encontrados:', todosServicos?.length || 0)
         setServicos(todosServicos || [])
+
+        // CRÍTICO: Extrair empresa_id do primeiro serviço encontrado
+        if (todosServicos && todosServicos.length > 0) {
+          const empresaIdDoServico = todosServicos[0].empresa_id
+          console.log('✅ empresa_id extraído dos serviços:', empresaIdDoServico)
+          setEmpresaId(empresaIdDoServico)
+        }
         return
       }
 
@@ -166,9 +173,13 @@ export default function EmpresaDetalhes() {
   }
 
   const carregarHorariosDisponiveis = async (data: string, duracao: number) => {
-    if (!empresaId) return
+    if (!empresaId) {
+      console.warn('⚠️ empresaId é null - não pode carregar horários')
+      return
+    }
 
     try {
+      console.log('📅 Carregando horários para:', { empresaId, data, duracao })
       const { data: horarios, error } = await supabase
         .rpc('listar_horarios_disponiveis', {
           p_empresa_id: empresaId,
@@ -176,7 +187,12 @@ export default function EmpresaDetalhes() {
           p_duracao: duracao
         })
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro na chamada RPC:', error)
+        throw error
+      }
+
+      console.log('✅ Horários carregados:', horarios?.length || 0)
       setHorariosDisponiveis(horarios || [])
     } catch (error) {
       console.error('Erro ao carregar horários disponíveis:', error)
@@ -188,7 +204,7 @@ export default function EmpresaDetalhes() {
     if (dataAgendamento && servicoSelecionado && empresaId) {
       carregarHorariosDisponiveis(dataAgendamento, servicoSelecionado.duracao)
     }
-  }, [dataAgendamento, servicoSelecionado])
+  }, [dataAgendamento, servicoSelecionado, empresaId])
 
   const iniciarAgendamento = (servico: Servico) => {
     if (!usuario) {
